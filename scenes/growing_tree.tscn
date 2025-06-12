@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=3 uid="uid://dci7lnxcs8oxt"]
+
+[ext_resource type="Script" uid="uid://gfkd4bk75v0w" path="res://scenes/growing_tree.gd" id="1_83m1v"]
+[ext_resource type="Resource" uid="uid://bpivm2ikmxt15" path="res://tree_param.tres" id="2_2jc1w"]
+[ext_resource type="PackedScene" uid="uid://7mtetmy3pu5k" path="res://scenes/growing_branch.tscn" id="2_yvbsd"]
+[ext_resource type="Script" uid="uid://dm5ujht82i2ps" path="res://branch_param.gd" id="4_vrwri"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_vh1b5"]
+frequency = 0.1926
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_gfn64"]
+
+[sub_resource type="Resource" id="Resource_w4nc6"]
+resource_local_to_scene = true
+script = ExtResource("4_vrwri")
+resolution = 10
+max_length = 1000
+min_width = 10
+max_width = 100
+width_profile = SubResource("FastNoiseLite_gfn64")
+base_angle = 0.0
+rand_curve = SubResource("FastNoiseLite_vh1b5")
+max_curve = 10.0
+
+[node name="GrowingTree" type="Node2D"]
+script = ExtResource("1_83m1v")
+param = ExtResource("2_2jc1w")
+
+[node name="Branches" type="Node2D" parent="."]
+
+[node name="Trunk" parent="Branches" instance=ExtResource("2_yvbsd")]
+unique_name_in_owner = true
+color = Color(0.494118, 0.388235, 0.184314, 1)
+param = SubResource("Resource_w4nc6")
+
+[node name="GrowthTimer" type="Timer" parent="."]
+wait_time = 0.1
+
+[connection signal="timeout" from="GrowthTimer" to="." method="_on_growth_timer_timeout"]

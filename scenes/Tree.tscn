@@ -1,0 +1,95 @@
+[gd_scene load_steps=18 format=3 uid="uid://dcxmbncdimajb"]
+
+[ext_resource type="Shader" uid="uid://byc0x5rx011ir" path="res://shaders/Tree.gdshader" id="1_x8g8j"]
+[ext_resource type="Script" uid="uid://dv8un441euoyo" path="res://scripts/tree.gd" id="2_okrcs"]
+[ext_resource type="Shader" uid="uid://del2dadbntw7k" path="res://shaders/Leaves.gdshader" id="3_1ssau"]
+[ext_resource type="Texture2D" uid="uid://duroew523os7m" path="res://assets/maple_leaf__83760.png" id="4_0leyk"]
+[ext_resource type="PackedScene" uid="uid://0pt5e0acgrhk" path="res://scenes/dynamic_leaves.tscn" id="5_recyu"]
+[ext_resource type="Shader" uid="uid://lgbcykkw8sui" path="res://shaders/DynamicLeaves.gdshader" id="6_kp11r"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_t1skb"]
+frequency = 0.089
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_r6ups"]
+noise = SubResource("FastNoiseLite_t1skb")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b3cvg"]
+resource_local_to_scene = true
+shader = ExtResource("1_x8g8j")
+shader_parameter/NOISE_PATTERN = SubResource("NoiseTexture2D_r6ups")
+shader_parameter/NOISE_OFFSET = 0.0
+shader_parameter/BASE_COLOR = Vector3(0.87, 0.348, 0)
+shader_parameter/hori_freq = 2.0
+shader_parameter/vert_freq = 15.0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_r0kve"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p7i7x"]
+shader = ExtResource("3_1ssau")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ftuw6"]
+_surfaces = [{
+"2d": true,
+"aabb": AABB(-64, -64, 0, 128, 128, 0),
+"attribute_data": PackedByteArray(0, 0, 128, 63, 205, 204, 204, 60, 0, 0, 128, 63, 0, 0, 118, 63, 51, 51, 119, 63, 0, 0, 128, 63, 154, 153, 249, 60, 0, 0, 128, 63, 0, 0, 0, 0, 102, 102, 121, 63, 0, 0, 0, 0, 0, 0, 32, 61, 0, 0, 32, 61, 205, 204, 204, 58, 51, 51, 118, 63, 0, 0, 0, 0),
+"format": 34393296913,
+"index_count": 18,
+"index_data": PackedByteArray(7, 0, 0, 0, 1, 0, 1, 0, 2, 0, 3, 0, 3, 0, 4, 0, 5, 0, 5, 0, 6, 0, 7, 0, 7, 0, 1, 0, 3, 0, 3, 0, 5, 0, 7, 0),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray(0, 0, 128, 66, 51, 51, 115, 194, 0, 0, 128, 66, 0, 0, 108, 66, 102, 102, 110, 66, 0, 0, 128, 66, 102, 102, 112, 194, 0, 0, 128, 66, 0, 0, 128, 194, 204, 204, 114, 66, 0, 0, 128, 194, 0, 0, 108, 194, 0, 0, 108, 194, 51, 51, 127, 194, 102, 102, 108, 66, 0, 0, 128, 194)
+}]
+
+[sub_resource type="MultiMesh" id="MultiMesh_2i8fu"]
+mesh = SubResource("ArrayMesh_ftuw6")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0vmv5"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_pyp76"]
+frequency = 0.001
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_v3xbf"]
+noise = SubResource("FastNoiseLite_pyp76")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vb3ww"]
+resource_local_to_scene = true
+shader = ExtResource("6_kp11r")
+shader_parameter/TREE_SEED = 659048403
+shader_parameter/NOISE2D = SubResource("NoiseTexture2D_v3xbf")
+shader_parameter/EMISSION_MASK = SubResource("ViewportTexture_0vmv5")
+shader_parameter/sway_speed = 1.0
+shader_parameter/sway_strength = 0.05
+shader_parameter/sway_phase_len = 8.0
+shader_parameter/origin = Vector2(-580, -766)
+shader_parameter/leaf_scale = 0.01
+shader_parameter/tree_size = Vector2(1155, 766)
+
+[node name="Tree" type="MeshInstance2D"]
+material = SubResource("ShaderMaterial_b3cvg")
+position = Vector2(581, 587)
+mesh = SubResource("ArrayMesh_r0kve")
+script = ExtResource("2_okrcs")
+main_width = 100
+main_curve = 0.017
+trunk_color = Color(0.87, 0.348, 0, 1)
+max_curve_angle = 6.283
+branching_mode = "SIGNED_GAUSSIAN"
+branching_angle = 1.571
+branching_spread = 0.17
+
+[node name="StaticLeaves" type="MultiMeshInstance2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_p7i7x")
+multimesh = SubResource("MultiMesh_2i8fu")
+texture = ExtResource("4_0leyk")
+
+[node name="Icon" type="MeshInstance2D" parent="StaticLeaves"]
+visible = false
+scale = Vector2(0.1, 0.1)
+mesh = SubResource("ArrayMesh_ftuw6")
+
+[node name="DynamicLeaves" parent="." instance=ExtResource("5_recyu")]
+visible = false
+amount = 10000
+process_material = SubResource("ShaderMaterial_vb3ww")

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://csb8qplgdtfo4"]
+
+[ext_resource type="Script" uid="uid://dsb63a6t71xqv" path="res://scenes/better_tree.gd" id="1_fls8w"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7psqv"]
+
+[node name="BetterTree" type="Polygon2D"]
+texture = SubResource("NoiseTexture2D_7psqv")
+skeleton = NodePath("../Skeleton")
+script = ExtResource("1_fls8w")

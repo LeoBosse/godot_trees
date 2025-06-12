@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfu6fulrkkcpr"]
+
+[ext_resource type="Script" uid="uid://cuq3b3rd2sree" path="res://scripts/Scissors.gd" id="1_56nw5"]
+
+[node name="Scissors" type="Node"]
+script = ExtResource("1_56nw5")

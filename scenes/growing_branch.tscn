@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://7mtetmy3pu5k"]
+
+[ext_resource type="Script" uid="uid://bldx3phpxq4ee" path="res://growing_branch.gd" id="1_0hxwq"]
+[ext_resource type="Resource" uid="uid://1nnurcjevmq6" path="res://branch_param.tres" id="2_hfvkn"]
+
+[node name="GrowingBranch" type="Polygon2D"]
+color = Color(0.427451, 0.333333, 0.0901961, 1)
+script = ExtResource("1_0hxwq")
+param = ExtResource("2_hfvkn")

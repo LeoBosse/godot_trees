@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://bd3vuyt1qqvqk"]
+
+[ext_resource type="PackedScene" uid="uid://bgyds06jjlm33" path="res://scenes/forest.tscn" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://dfu6fulrkkcpr" path="res://scenes/scissors.tscn" id="2_sugp2"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Forest" parent="." instance=ExtResource("1_0wfyh")]
+
+[node name="Scissors" parent="." instance=ExtResource("2_sugp2")]
+
+[connection signal="send_cut" from="Scissors" to="Forest" method="_on_scissors_send_cut"]
