@@ -31,3 +31,5 @@ func _input(event):
 		if get_child_count() and is_cutting:
 			get_child(0).set_point_position(1, event.position)
 		
+
+##test
