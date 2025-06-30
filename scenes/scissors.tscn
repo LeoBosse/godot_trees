@@ -1,6 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://dfu6fulrkkcpr"]
+[gd_scene load_steps=4 format=3 uid="uid://dfu6fulrkkcpr"]
 
 [ext_resource type="Script" uid="uid://cuq3b3rd2sree" path="res://scripts/Scissors.gd" id="1_56nw5"]
 
-[node name="Scissors" type="Node"]
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_ba3ks"]
+
+[sub_resource type="Curve2D" id="Curve2D_ba3ks"]
+
+[node name="Scissors" type="Area2D"]
 script = ExtResource("1_56nw5")
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0, 0, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SegmentShape2D_ba3ks")
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource("Curve2D_ba3ks")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]

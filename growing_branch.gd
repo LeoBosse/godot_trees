@@ -1,4 +1,4 @@
-extends Polygon2D
+extends Area2D
 class_name GrowingBranch
 
 var DtoR:float = PI/180.
@@ -30,9 +30,9 @@ var max_length_reached:bool = false
 func _ready():
 	param.rand_curve.seed = randi()
 	print(param.rand_curve)
-	add_child(Path2D.new(), true)
-	get_child(0).add_child(PathFollow2D.new(), true)
-	get_child(0).curve = Curve2D.new()
+	#add_child(Path2D.new(), true)
+	#get_child(0).add_child(PathFollow2D.new(), true)
+	$Path2D.curve = Curve2D.new()
 	
 	InitializeBranche()
 
@@ -53,7 +53,6 @@ func GetNbPoints() -> int:
 	return $Path2D.curve.point_count
 
 
-
 func InitializeBranche():
 	
 	#print('base_angle ', base_angle)
@@ -63,11 +62,11 @@ func InitializeBranche():
 	$Path2D.curve.add_point(Vector2.ZERO)
 	$Path2D.curve.add_point(growth_direction * param.resolution)
 	
-	self.polygon = PackedVector2Array([
+	SetPolygon(PackedVector2Array([
 		+ normal_direction * param.min_width/2, 
 		+ normal_direction * param.min_width/2 + growth_direction * param.resolution, 
 		- normal_direction * param.min_width/2 + growth_direction * param.resolution, 
-		- normal_direction * param.min_width/2])
+		- normal_direction * param.min_width/2]))
 #	uv = PackedVector2Array([
 #		Vector2(1, 0), 
 #		Vector2(1, 1), 
@@ -78,11 +77,11 @@ func _GetMidIndex(nb_vertices:int)->int:
 	return int(nb_vertices / 2.) - 1
 	
 func GetWidth(index:int) -> float:
-	if len(polygon) > index and index >= 0:
-		return (polygon[index] - polygon[-1-index]).length()
+	if len($Shape.polygon) > index and index >= 0:
+		return ($Shape.polygon[index] - $Shape.polygon[-1-index]).length()
 	else:
 		print("ERROR: asked for an index ", index, "outside of polygon array range.")
-		return len(polygon)
+		return len($Shape.polygon)
 
 func GrowTip(points:PackedVector2Array, growing_rate:float) -> PackedVector2Array:
 	
@@ -98,8 +97,8 @@ func GrowTip(points:PackedVector2Array, growing_rate:float) -> PackedVector2Arra
 #		print("max length reached")
 		return points
 	
-	points.insert(mid_index + 1, 	polygon[mid_index])
-	points.insert(mid_index + 2, 	polygon[mid_index+1])
+	points.insert(mid_index + 1, 	$Shape.polygon[mid_index])
+	points.insert(mid_index + 2, 	$Shape.polygon[mid_index+1])
 	
 	var width:float = GetWidth(mid_index + 1)
 	
@@ -142,7 +141,7 @@ func GrowBranch(points:PackedVector2Array, enlarge_rate:float) -> PackedVector2A
 		
 		normal_direction = (points[i_R] - points[i_L]).normalized()
 		var width = (points[i_R] - points[i_L]).length()
-		var pre_width = (polygon[pi_R] - polygon[pi_L]).length()
+		var pre_width = ($Shape.polygon[pi_R] - $Shape.polygon[pi_L]).length()
 		
 		if not max_width_reached:
 			points[i_R] += normal_direction * (pre_width - width)/2.
@@ -165,18 +164,76 @@ func GrowBranch(points:PackedVector2Array, enlarge_rate:float) -> PackedVector2A
 	
 	
 func Cut(start:Vector2, end:Vector2):
-	var cut_dir = end - start
-	for i in range(1, GetNbPoints()):
-		var branch_start: Vector2 = $Path2D.curve.get_point_position(i-1)
-		var branch_end:   Vector2 = $Path2D.curve.get_point_position(i)
-		var branch_dir = branch_end - branch_start
-		print(start, " ", end, " , ", branch_start, " ", branch_end)
+	
+	print(start, end)
+	
+	#var line = Line2D.new()
+	#line.position = Vector2.ZERO - global_position
+	#line.default_color = Color(1, 0, 0)
+	#line.width = 5
+	#line.add_point(start)
+	#line.add_point(end)
+	#add_child(line) 
+	
+	
+	### Cut the branch polygons (shape and collision)
+	
+	var polygon:Array = GetPolygon()
+	var nb_vertices:int = len(polygon)
+	var intersection_points:Array = []
+	var intersection_indices:Array = []
+	for i in range(1, nb_vertices):
+		var branch_start: Vector2 = global_position + polygon[i-1]
+		var branch_end:   Vector2 = global_position + polygon[i % nb_vertices]
 		
-		var intersection = Geometry2D.line_intersects_line(start, cut_dir, branch_start, branch_dir)
+		var intersection = Geometry2D.segment_intersects_segment(start, end, branch_start, branch_end)
+		
+		#line = Line2D.new()
+		#line.default_color = Color(0, 0, 1)
+		#line.width = 5
+		#line.add_point(branch_start - global_position)
+		#line.add_point(branch_end - global_position)
+		#add_child(line)
+		
+		
 		if intersection:
+			intersection -= global_position
 			print("it's a cut!")
-			var circle = Sprite2D.new()
-			circle.texture = load("res://assets/icon.svg")
-			circle.position = intersection
-			add_child(circle)
+			intersection_points.append(intersection)
+			intersection_indices.append(i)
+			#var circle = Sprite2D.new()
+			#circle.texture = load("res://assets/icon.svg")
+			#circle.position = intersection
+			#add_child(circle)
+	
+	if len(intersection_points) == 2:
+		var new_branch_polygon = polygon.slice(0, intersection_indices[0])
+		new_branch_polygon.append(intersection_points[0])
+		new_branch_polygon.append(intersection_points[1])
+		new_branch_polygon.append_array(polygon.slice(intersection_indices[1]))
+		SetPolygon(new_branch_polygon)
+		
+	### Cut the branch path if necessary
+	if len(intersection_points) > 0:
+		var path_intersection:Vector2 = Vector2.ZERO
+		for i in range(1, GetNbPoints()):
+			var branch_start: Vector2 = global_position + $Path2D.curve.get_point_position(i-1)
+			var branch_end:   Vector2 = global_position + $Path2D.curve.get_point_position(i)
 			
+			var intersection = Geometry2D.segment_intersects_segment(start, end, branch_start, branch_end)
+		
+			if intersection:
+				intersection -= global_position
+				print("it's a cut!")
+				for j in range(i, GetNbPoints()):
+					$Path2D.curve.remove_point(i)
+				$Path2D.curve.add_point(intersection)
+				break
+				
+
+func GetPolygon():
+	return $Shape.polygon
+
+func SetPolygon(new_polygon):
+	$Shape.polygon = new_polygon
+	$CollisionShape.polygon = new_polygon

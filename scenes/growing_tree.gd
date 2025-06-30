@@ -56,10 +56,10 @@ func GrowBranch(branch:GrowingBranch) -> void:
 		return
 	
 	growing_counter += 1
-	var points: PackedVector2Array = branch.polygon
+	var points: PackedVector2Array = branch.GetPolygon()
 	points = branch.GrowTip(points, param.growing_rate * param.grow_frequency)
 	points = branch.GrowBranch(points, param.enlarge_rate * param.grow_frequency)
-	branch.polygon = points
+	branch.SetPolygon(points)
 	
 	if BranchingCondition(branch):
 #		print(branch.level, max_levels)
@@ -68,13 +68,6 @@ func GrowBranch(branch:GrowingBranch) -> void:
 #	for i in range(0, mid_index+1):
 #		print(i, polygon[i], polygon[-1-i])
 	
-	
-	
-func Cut(start:Vector2, end:Vector2):
-	for b in $Branches.get_children():
-		print(b)
-		b.Cut(start, end)
-
 func AddBranch(branch:GrowingBranch) -> void:
 	var new_branch:GrowingBranch = growing_branch_scene.instantiate()
 	var new_branch_progress_ratio:float = randf()

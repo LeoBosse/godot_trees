@@ -8,5 +8,3 @@
 [node name="Forest" parent="." instance=ExtResource("1_0wfyh")]
 
 [node name="Scissors" parent="." instance=ExtResource("2_sugp2")]
-
-[connection signal="send_cut" from="Scissors" to="Forest" method="_on_scissors_send_cut"]

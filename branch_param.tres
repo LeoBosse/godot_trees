@@ -16,4 +16,4 @@ max_width = 100
 width_profile = SubResource("FastNoiseLite_gv6tw")
 base_angle = 0.0
 rand_curve = SubResource("FastNoiseLite_v2stj")
-max_curve = 5.0
+max_curve = 50.0

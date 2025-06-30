@@ -30,7 +30,6 @@ param = ExtResource("2_2jc1w")
 
 [node name="Trunk" parent="Branches" instance=ExtResource("2_yvbsd")]
 unique_name_in_owner = true
-color = Color(0.494118, 0.388235, 0.184314, 1)
 param = SubResource("Resource_w4nc6")
 
 [node name="GrowthTimer" type="Timer" parent="."]

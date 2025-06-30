@@ -1,9 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://7mtetmy3pu5k"]
+[gd_scene load_steps=4 format=3 uid="uid://7mtetmy3pu5k"]
 
 [ext_resource type="Script" uid="uid://bldx3phpxq4ee" path="res://growing_branch.gd" id="1_0hxwq"]
 [ext_resource type="Resource" uid="uid://1nnurcjevmq6" path="res://branch_param.tres" id="2_hfvkn"]
 
-[node name="GrowingBranch" type="Polygon2D"]
-color = Color(0.427451, 0.333333, 0.0901961, 1)
+[sub_resource type="Curve2D" id="Curve2D_h8hqj"]
+
+[node name="GrowingBranch" type="Area2D"]
 script = ExtResource("1_0hxwq")
 param = ExtResource("2_hfvkn")
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource("Curve2D_h8hqj")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+
+[node name="Shape" type="Polygon2D" parent="."]
+color = Color(0.673612, 0.306076, 0, 1)
+
+[node name="CollisionShape" type="CollisionPolygon2D" parent="."]

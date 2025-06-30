@@ -55,7 +55,7 @@ noise = SubResource("FastNoiseLite_pyp76")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vb3ww"]
 resource_local_to_scene = true
 shader = ExtResource("6_kp11r")
-shader_parameter/TREE_SEED = 659048403
+shader_parameter/TREE_SEED = 6820305
 shader_parameter/NOISE2D = SubResource("NoiseTexture2D_v3xbf")
 shader_parameter/EMISSION_MASK = SubResource("ViewportTexture_0vmv5")
 shader_parameter/sway_speed = 1.0

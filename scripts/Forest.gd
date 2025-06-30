@@ -17,11 +17,11 @@ func Grow():
 	positions = []
 	for i in range(nb_trees):
 		positions.append(Vector2((screen_size.x/(nb_trees+1)) * (i+1), screen_size.y-100))
-		AddTree(positions[-1], 2./3.)
+		AddTree(positions[-1], 1)
 #		print(get_children()[-1].base_width)
 
 func AddTree(pos:Vector2, scaling:float):
-	var tree_instance = tree_scene.instantiate(  )
+	var tree_instance = tree_scene.instantiate()
 	tree_instance.position = pos
 	tree_instance.scale = Vector2(1, 1) * scaling
 #	tree_instance.material.set_shader_parameter("NOISE_OFFSET", randf())
@@ -33,8 +33,3 @@ func _input(_ev):
 			t.queue_free()
 		Grow()
 			
-
-func _on_scissors_send_cut(start, end):
-	print("cut!")
-	for t in get_children():
-		t.Cut(start, end)
