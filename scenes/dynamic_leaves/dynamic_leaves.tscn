@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://0pt5e0acgrhk"]
 
-[ext_resource type="Shader" uid="uid://lgbcykkw8sui" path="res://shaders/DynamicLeaves.gdshader" id="1_j4ki6"]
+[ext_resource type="Shader" uid="uid://lgbcykkw8sui" path="res://scenes/dynamic_leaves/DynamicLeaves.gdshader" id="1_j4ki6"]
 [ext_resource type="Texture2D" uid="uid://duroew523os7m" path="res://assets/maple_leaf__83760.png" id="2_xbn7q"]
-[ext_resource type="Script" uid="uid://cvoi8auv17sm6" path="res://scripts/dynamic_leaves.gd" id="3_2g7wo"]
+[ext_resource type="Script" uid="uid://cvoi8auv17sm6" path="res://scenes/dynamic_leaves/dynamic_leaves.gd" id="3_2g7wo"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ejgj3"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")

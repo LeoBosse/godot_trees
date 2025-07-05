@@ -8,7 +8,7 @@ var DtoR:float = PI/180.
 @export var param:Resource
 
 ## Level of the branch from the tree trunck (0)
-@onready var level: 			int 	= 0 
+@onready var level: int = 0 
 
 @onready var growth_direction: Vector2 = Vector2.UP
 @onready var normal_direction: Vector2  = Vector2(-growth_direction.y, growth_direction.x)
@@ -29,7 +29,7 @@ var max_length_reached:bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	param.rand_curve.seed = randi()
-	print(param.rand_curve)
+	#print(param.rand_curve)
 	#add_child(Path2D.new(), true)
 	#get_child(0).add_child(PathFollow2D.new(), true)
 	$Path2D.curve = Curve2D.new()
@@ -91,10 +91,10 @@ func GrowTip(points:PackedVector2Array, growing_rate:float) -> PackedVector2Arra
 	var nb_vertices:int = len(points)
 	var mid_index:int = _GetMidIndex(nb_vertices)
 	
-	if float(nb_vertices * growing_rate) / 2 >= param.max_length:
+	if mid_index * growing_rate >= param.max_length:
 		max_length_reached = true
 		growing = false
-#		print("max length reached")
+		print("max length reached")
 		return points
 	
 	points.insert(mid_index + 1, 	$Shape.polygon[mid_index])
@@ -103,7 +103,7 @@ func GrowTip(points:PackedVector2Array, growing_rate:float) -> PackedVector2Arra
 	var width:float = GetWidth(mid_index + 1)
 	
 	nb_vertices += 2
-	nb_vertices += 2
+	#nb_vertices += 2
 	mid_index += 1
 	
 #	normal_direction = (points[mid_index] - points[mid_index + 1]).normalized()
@@ -128,9 +128,10 @@ func GrowBranch(points:PackedVector2Array, enlarge_rate:float) -> PackedVector2A
 	var nb_vertices:int = len(points)
 	var mid_index:int = _GetMidIndex(nb_vertices)
 	
-	if (points[0] - points[-1]).length() >= param.max_width:
+	if GetWidth(0) >= param.max_width:
 		max_width_reached = true
 		growing = false
+		print("max_width_reached")
 	
 	for i in range(1, mid_index):
 		
@@ -151,8 +152,6 @@ func GrowBranch(points:PackedVector2Array, enlarge_rate:float) -> PackedVector2A
 			points[i_L] -= (i_R / float(nb_vertices)) * normal_direction * (pre_width - width)/2.
 			
 #		if BranchingCondition(enlarge_rate, (points[i] - points[-i-1]).length()):
-#
-#			
 	
 	normal_direction = (points[0] - points[-1]).normalized()
 	

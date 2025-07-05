@@ -1,11 +1,11 @@
 [gd_scene load_steps=18 format=3 uid="uid://dcxmbncdimajb"]
 
-[ext_resource type="Shader" uid="uid://byc0x5rx011ir" path="res://shaders/Tree.gdshader" id="1_x8g8j"]
-[ext_resource type="Script" uid="uid://dv8un441euoyo" path="res://scripts/tree.gd" id="2_okrcs"]
-[ext_resource type="Shader" uid="uid://del2dadbntw7k" path="res://shaders/Leaves.gdshader" id="3_1ssau"]
+[ext_resource type="Shader" uid="uid://byc0x5rx011ir" path="res://scenes/tree/Tree.gdshader" id="1_x8g8j"]
+[ext_resource type="Script" uid="uid://dv8un441euoyo" path="res://scenes/tree/tree.gd" id="2_okrcs"]
+[ext_resource type="Shader" uid="uid://del2dadbntw7k" path="res://scenes/dynamic_leaves/Leaves.gdshader" id="3_1ssau"]
 [ext_resource type="Texture2D" uid="uid://duroew523os7m" path="res://assets/maple_leaf__83760.png" id="4_0leyk"]
-[ext_resource type="PackedScene" uid="uid://0pt5e0acgrhk" path="res://scenes/dynamic_leaves.tscn" id="5_recyu"]
-[ext_resource type="Shader" uid="uid://lgbcykkw8sui" path="res://shaders/DynamicLeaves.gdshader" id="6_kp11r"]
+[ext_resource type="PackedScene" uid="uid://0pt5e0acgrhk" path="res://scenes/dynamic_leaves/dynamic_leaves.tscn" id="5_recyu"]
+[ext_resource type="Shader" uid="uid://lgbcykkw8sui" path="res://scenes/dynamic_leaves/DynamicLeaves.gdshader" id="6_kp11r"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_t1skb"]
 frequency = 0.089

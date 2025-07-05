@@ -1,13 +1,13 @@
 [gd_scene load_steps=4 format=3 uid="uid://7mtetmy3pu5k"]
 
-[ext_resource type="Script" uid="uid://bldx3phpxq4ee" path="res://growing_branch.gd" id="1_0hxwq"]
-[ext_resource type="Resource" uid="uid://1nnurcjevmq6" path="res://branch_param.tres" id="2_hfvkn"]
+[ext_resource type="Script" uid="uid://bldx3phpxq4ee" path="res://scenes/growing_tree/growing_branch.gd" id="1_srplc"]
+[ext_resource type="Resource" uid="uid://1nnurcjevmq6" path="res://scenes/growing_tree/branch_param.tres" id="2_g8ekv"]
 
 [sub_resource type="Curve2D" id="Curve2D_h8hqj"]
 
 [node name="GrowingBranch" type="Area2D"]
-script = ExtResource("1_0hxwq")
-param = ExtResource("2_hfvkn")
+script = ExtResource("1_srplc")
+param = ExtResource("2_g8ekv")
 
 [node name="Path2D" type="Path2D" parent="."]
 curve = SubResource("Curve2D_h8hqj")

@@ -2,8 +2,7 @@ extends Node2D
 
 @export var nb_trees = 10
 
-var tree_scene = preload("res://scenes/growing_tree.tscn")
-
+var tree_scene = preload("res://scenes/growing_tree/growing_tree.tscn")
 
 var positions = []
 # Called when the node enters the scene tree for the first time.

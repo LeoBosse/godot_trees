@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="TreeParameters" load_steps=4 format=3 uid="uid://bpivm2ikmxt15"]
+
+[ext_resource type="Script" uid="uid://c3y2q7yvdbgq" path="res://scenes/growing_tree/tree_param.gd" id="1_srr4j"]
+
+[sub_resource type="Curve" id="Curve_l8ynq"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.28821, 0.932584), -0.233912, -1.00555, 1, 0, Vector2(0.68559, 0.719101), -0.537227, -1.58612, 1, 0, Vector2(1, 0.258427), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_srr4j"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.191011), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[resource]
+script = ExtResource("1_srr4j")
+growing_rate = 50.0
+enlarge_rate = 10.0
+grow_frequency = 1.0
+max_absolute_angle = 180.0
+branching_mode = "SIGNED_GAUSSIAN"
+branching_angle = 90.0
+branching_spread = 5.0
+max_levels = 1
+branching_proba = 0.5
+branch_len_curve = SubResource("Curve_l8ynq")
+branch_max_width_curve = SubResource("Curve_srr4j")

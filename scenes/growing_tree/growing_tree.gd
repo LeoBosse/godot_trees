@@ -28,12 +28,14 @@ class_name GrowingTree
 #
 #@export var branching_proba: float = 0.002
 
-@onready var growing_branch_scene:PackedScene = preload("res://scenes/growing_branch.tscn")
+@onready var growing_branch_scene:PackedScene = preload("res://scenes/growing_tree/growing_branch.tscn")
 
 @onready var growing:bool = true
 
 @onready var nb_branches:int = 1
 @onready var growing_counter:int = 0
+
+@onready var trunk:Node = %Trunk
 
 var RtoD:float = 180./PI
 var DtoR:float = 1. / RtoD
@@ -43,12 +45,12 @@ func _ready():
 #	growing_branch_scene.resource_local_to_scene = true
 	$GrowthTimer.start()
 
-func GrowSubBranches(branch:GrowingBranch, level:int) -> void:
+func GrowSubBranches(branch:GrowingBranch) -> void:
 #	print("grow branch level ", branch.level, level)
 	GrowBranch(branch)
 	for b in branch.get_children():
 		if b is GrowingBranch:
-			GrowSubBranches(b, level + 1)
+			GrowSubBranches(b)
 
 
 func GrowBranch(branch:GrowingBranch) -> void:
@@ -69,7 +71,9 @@ func GrowBranch(branch:GrowingBranch) -> void:
 #		print(i, polygon[i], polygon[-1-i])
 	
 func AddBranch(branch:GrowingBranch) -> void:
+	
 	var new_branch:GrowingBranch = growing_branch_scene.instantiate()
+	## Define the position of the new branch along the existing branch. in [0, 1]
 	var new_branch_progress_ratio:float = randf()
 	
 	
@@ -80,8 +84,9 @@ func AddBranch(branch:GrowingBranch) -> void:
 	new_branch.z_index = branch.z_index + 1
 
 #	new_branch.resolution =  branch.resolution / 2.
-	new_branch.param.max_length =  branch.param.max_length / 1.5
-	new_branch.param.max_width  =  branch.GetWidth(int(new_branch.attach_progress / branch.param.resolution))
+	print(param.branch_len_curve.sample(new_branch.level / param.max_levels))
+	new_branch.param.max_length =  trunk.param.max_length * param.branch_len_curve.sample(new_branch.level / param.max_levels)
+	new_branch.param.max_width  =  trunk.param.max_width  * param.branch_max_width_curve.sample(new_branch.level / param.max_levels)
 
 	#new_branch.rotation = GetBrancheAngle()
 	new_branch.param.base_angle = GetBrancheAngle() #new_branch.rotation
@@ -91,11 +96,12 @@ func AddBranch(branch:GrowingBranch) -> void:
 	branch.add_child(new_branch)
 	nb_branches += 1
 	
-#	print("New branche!")
+	print("New branche!")
 
 
 func BranchingCondition(branch:GrowingBranch) -> bool:
 	var condition:bool = branch.level < param.max_levels \
+					 and nb_branches <= branch.param.max_nb_sub_branches \
 					 and randf() < param.branching_proba * param.grow_frequency
 	return condition
 #
@@ -124,7 +130,7 @@ func GetSIGNEDGAUSSBrancheAngle(main, spread):
 func _on_growth_timer_timeout():
 #	print('time to grow!')
 	growing_counter = 0
-	GrowSubBranches(%Trunk, 0)
+	GrowSubBranches(%Trunk)
 	if growing_counter == 0:
 		$GrowthTimer.stop()
 		growing = false

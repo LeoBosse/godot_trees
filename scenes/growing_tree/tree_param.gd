@@ -2,12 +2,13 @@ extends Resource
 class_name TreeParameters
 
 ## Length of a branch segment (in pixels)
-@export var growing_rate: float = 20.
+@export var growing_rate: float = 50.
 
 ## Width added to the branch (in pixels)
-@export var enlarge_rate: float = 2.
+@export var enlarge_rate: float = 10.
 
-@export var grow_frequency: float = .1
+## Speed of growth, smaller is lower.
+@export var grow_frequency: float = 1.
 
 ## Maximum angle of a segment with the ground. e.g. PI/2 would prevent any segments to ever go down.
 @export var max_absolute_angle:float = 180
@@ -20,14 +21,19 @@ class_name TreeParameters
 ## Maximum angle between the trunk and a branche when branching
 @export var branching_angle: 		float 	= 0
 @export var branching_spread: 		float 	= 0
-@export var max_levels:				int 	= 5
 
-@export var growth_coeff: float	= 0.7
-@export var width_coeff: float	= 0.7
+@export var max_levels:				int 	= 1
+
+#@export var growth_coeff: float	= 0.7
+#@export var width_coeff: float	= 0.7
 
 @export var branching_proba: float = 0.5
 
+## Curve used to define how fast the branches get shorter at every level.
 @export var branch_len_curve:Curve = Curve.new()
+
+## Curve used to define how fast the branches get thinner at every level.
+@export var branch_max_width_curve:Curve = Curve.new()
 
 #func _ready():
 	#branch_len_curve = 

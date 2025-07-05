@@ -5,11 +5,14 @@ class_name BranchParameters
 @export var resolution:	int 	= 10 
 
 ## Maximum length of the branch
-@export var max_length:	int 	= 500
+@export var max_length:	int 	= 100
 
 @export var min_width: 			int		= 1
 @export var max_width: 			int		= 100
 @export var width_profile: FastNoiseLite	= FastNoiseLite.new()
+
+## The maximum number of branches growing from this one.
+@export var max_nb_sub_branches:int = 10
 
 ## Angle of the branch base with the parent in degree. 0 is parallel, +/-90 perpendicular
 @export var base_angle:			float 	= 0. 
