@@ -3,23 +3,26 @@
 [ext_resource type="Script" uid="uid://c3y2q7yvdbgq" path="res://scenes/growing_tree/tree_param.gd" id="1_srr4j"]
 
 [sub_resource type="Curve" id="Curve_l8ynq"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.28821, 0.932584), -0.233912, -1.00555, 1, 0, Vector2(0.68559, 0.719101), -0.537227, -1.58612, 1, 0, Vector2(1, 0.258427), 0.0, 0.0, 0, 0]
-point_count = 4
+_limits = [0.0, 1.0, 0.0, 2.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1.4, 0.6), 0.0, 0.0, 0, 0]
+point_count = 2
+metadata/_snap_enabled = true
 
 [sub_resource type="Curve" id="Curve_srr4j"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.191011), 0.0, 0.0, 0, 0]
-point_count = 2
+_limits = [0.0, 1.0, 0.0, 2.0]
+_data = [Vector2(0, 1), 0.0, -0.9, 0, 1, Vector2(1, 0.1), 0.0, 0.0, 0, 0, Vector2(2, 0.1), 0.0, 0.0, 1, 0]
+point_count = 3
+metadata/_snap_enabled = true
 
 [resource]
 script = ExtResource("1_srr4j")
-growing_rate = 50.0
-enlarge_rate = 10.0
-grow_frequency = 1.0
-max_absolute_angle = 180.0
+growing_rate = 100.0
+enlarge_rate = 2.0
+grow_frequency = 0.1
 branching_mode = "SIGNED_GAUSSIAN"
-branching_angle = 90.0
-branching_spread = 5.0
-max_levels = 1
-branching_proba = 0.5
+branching_angle = 1.5708
+branching_spread = 0.191986
+max_levels = 2
+branching_proba = 0.45
 branch_len_curve = SubResource("Curve_l8ynq")
 branch_max_width_curve = SubResource("Curve_srr4j")

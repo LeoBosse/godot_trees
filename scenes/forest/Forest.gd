@@ -11,7 +11,7 @@ func _ready():
 	Grow()
 
 func Grow():
-	# Grow the forest == several trees
+	"""Grow the forest == plant several trees"""
 	var screen_size = get_viewport_rect().size
 	positions = []
 	for i in range(nb_trees):
@@ -20,6 +20,7 @@ func Grow():
 #		print(get_children()[-1].base_width)
 
 func AddTree(pos:Vector2, scaling:float):
+	"""Add a tree in the forest."""
 	var tree_instance = tree_scene.instantiate()
 	tree_instance.position = pos
 	tree_instance.scale = Vector2(1, 1) * scaling

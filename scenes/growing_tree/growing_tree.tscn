@@ -1,12 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dci7lnxcs8oxt"]
+[gd_scene load_steps=7 format=3 uid="uid://dci7lnxcs8oxt"]
 
 [ext_resource type="Script" uid="uid://gfkd4bk75v0w" path="res://scenes/growing_tree/growing_tree.gd" id="1_83m1v"]
 [ext_resource type="Resource" uid="uid://bpivm2ikmxt15" path="res://scenes/growing_tree/tree_param.tres" id="2_2jc1w"]
 [ext_resource type="PackedScene" uid="uid://7mtetmy3pu5k" path="res://scenes/growing_tree/growing_branch.tscn" id="2_yvbsd"]
 [ext_resource type="Script" uid="uid://dm5ujht82i2ps" path="res://scenes/growing_tree/branch_param.gd" id="4_vrwri"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_vh1b5"]
-frequency = 0.1926
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_gfn64"]
 
@@ -14,14 +11,14 @@ frequency = 0.1926
 resource_local_to_scene = true
 script = ExtResource("4_vrwri")
 resolution = 10
-max_length = 1000
+max_length = 500
 min_width = 10
 max_width = 100
 width_profile = SubResource("FastNoiseLite_gfn64")
 max_nb_sub_branches = 10
 base_angle = 0.0
-rand_curve = SubResource("FastNoiseLite_vh1b5")
-max_curve = 10.0
+max_absolute_angle = 0.226893
+max_curve = 0.191986
 
 [node name="GrowingTree" type="Node2D"]
 script = ExtResource("1_83m1v")

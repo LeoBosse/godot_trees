@@ -2,8 +2,10 @@
 
 [ext_resource type="Script" uid="uid://dm5ujht82i2ps" path="res://scenes/growing_tree/branch_param.gd" id="1_csaqn"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_v2stj"]
-frequency = 1.0
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_csaqn"]
+frequency = 0.0087
+fractal_octaves = 6
+fractal_weighted_strength = 0.17
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_gv6tw"]
 
@@ -14,6 +16,8 @@ max_length = 100
 min_width = 1
 max_width = 100
 width_profile = SubResource("FastNoiseLite_gv6tw")
+max_nb_sub_branches = 10
 base_angle = 0.0
-rand_curve = SubResource("FastNoiseLite_v2stj")
-max_curve = 50.0
+max_absolute_angle = 1.55334
+rand_curve = SubResource("FastNoiseLite_csaqn")
+max_curve = 0.959931

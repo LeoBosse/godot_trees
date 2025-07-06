@@ -1,8 +1,6 @@
 extends Area2D
 class_name GrowingBranch
 
-var DtoR:float = PI/180.
-
 #@export_group("Branch Properties")
 
 @export var param:Resource
@@ -10,29 +8,38 @@ var DtoR:float = PI/180.
 ## Level of the branch from the tree trunck (0)
 @onready var level: int = 0 
 
+## Vector pointing to where the direction the branch is growing
 @onready var growth_direction: Vector2 = Vector2.UP
+## Vector perpendicular to the branch growing direction
 @onready var normal_direction: Vector2  = Vector2(-growth_direction.y, growth_direction.x)
 
+## 1 or -1: changes the sign of the curvature when it goes beyond the maximum absolute angle
+@onready var curving_sign: int = 1.
+
+## Array containing the points where a children branch is growing
 @onready var branching_points:Array = []
 @onready var widths:Array = []
 
 @onready var attach_progress:float = 0
 
+#Color of the branch. Access the polygon shape child color.
+@onready var color:Color:
+	get():
+		return $Shape.color
+	set(value):
+		$Shape.color = value
+
+## Is the branch still growing ?
 var growing:bool = true
 var max_width_reached:bool = false
 var max_length_reached:bool = false
 
-#var _noise = FastNoiseLite.new()
-#var random = RandomNumberGenerator.new()
-#random.randomize()
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	param.rand_curve.seed = randi()
 	#print(param.rand_curve)
 	#add_child(Path2D.new(), true)
 	#get_child(0).add_child(PathFollow2D.new(), true)
-	$Path2D.curve = Curve2D.new()
+	
 	
 	InitializeBranche()
 
@@ -42,6 +49,10 @@ func GetPositionFromProgress(progress:float, width:float = 0) -> Vector2:
 	return $Path2D/PathFollow2D.position
 	
 func GetPositionFromProgressRatio(progress_ratio:float, width:float = 0) -> Vector2:
+	"""Returns the local position of the branch at any point along its path.
+	progress_ratio -> float in [0, 1]: 0 at the base, 1 at the tip
+	width : distance perpendicular to the growth direction
+	"""
 	$Path2D/PathFollow2D.progress_ratio = progress_ratio
 	$Path2D/PathFollow2D.v_offset = width
 	return $Path2D/PathFollow2D.position
@@ -54,14 +65,22 @@ func GetNbPoints() -> int:
 
 
 func InitializeBranche():
+	"""Initialize the branch. 
+	 - Set the growth and normal direction at the base.
+	 - Initialize the branch path
+	 - Initialize the branch polygon
+	"""
 	
-	#print('base_angle ', base_angle)
-	growth_direction = Vector2.from_angle(deg_to_rad(param.base_angle - 90))
+	## Set growth and normal direction at the base.
+	growth_direction = Vector2.from_angle(param.base_angle - PI/2.)
 	normal_direction = Vector2(-growth_direction.y, growth_direction.x)
 	
+	## Init the branch path.
+	$Path2D.curve = Curve2D.new()
 	$Path2D.curve.add_point(Vector2.ZERO)
 	$Path2D.curve.add_point(growth_direction * param.resolution)
 	
+	## Init the branch polygon
 	SetPolygon(PackedVector2Array([
 		+ normal_direction * param.min_width/2, 
 		+ normal_direction * param.min_width/2 + growth_direction * param.resolution, 
@@ -74,47 +93,62 @@ func InitializeBranche():
 #		Vector2(0, 0)])
 	
 func _GetMidIndex(nb_vertices:int)->int:
+	"""Returns the index of the vertex at the tip of the branch."""
 	return int(nb_vertices / 2.) - 1
 	
 func GetWidth(index:int) -> float:
+	"""Get the width at any point along the branch """
 	if len($Shape.polygon) > index and index >= 0:
 		return ($Shape.polygon[index] - $Shape.polygon[-1-index]).length()
 	else:
-		print("ERROR: asked for an index ", index, "outside of polygon array range.")
+		print("ERROR: asked for an index (", index, ") outside of polygon array range.")
 		return len($Shape.polygon)
 
 func GrowTip(points:PackedVector2Array, growing_rate:float) -> PackedVector2Array:
-	
+	"""Grow the branch at the tip. The branch get longer but not wider."""
 	if not growing:
 		return points
 	
 	var nb_vertices:int = len(points)
 	var mid_index:int = _GetMidIndex(nb_vertices)
 	
-	if mid_index * growing_rate >= param.max_length:
+	## Check if the maximum length is reached. If true, stop the growth.
+	if GetLength() >= param.max_length:
 		max_length_reached = true
 		growing = false
 		print("max length reached")
 		return points
 	
+	## From here, the branch is still growing.
+	
+	## Adds two points in the polygon at the tip of branch.
 	points.insert(mid_index + 1, 	$Shape.polygon[mid_index])
 	points.insert(mid_index + 2, 	$Shape.polygon[mid_index+1])
-	
-	var width:float = GetWidth(mid_index + 1)
-	
 	nb_vertices += 2
-	#nb_vertices += 2
 	mid_index += 1
 	
 #	normal_direction = (points[mid_index] - points[mid_index + 1]).normalized()
 #	growth_direction = Vector2(normal_direction.y, -normal_direction.x).normalized()
 	
-	var curvature: float = deg_to_rad(param.rand_curve.get_noise_1d(mid_index) * param.max_curve)
+	## Curve the branch at the tip and change its growing direction
+	var curvature: float = param.rand_curve.get_noise_1d(mid_index) * param.max_curve * curving_sign
+	var new_abs_angle:float = fposmod(curvature + growth_direction.angle() + PI/2. + PI, TAU) - PI
+	print(rad_to_deg(new_abs_angle),  " ", rad_to_deg(param.max_absolute_angle))
+	if new_abs_angle > param.max_absolute_angle or new_abs_angle < - param.max_absolute_angle:
+		curving_sign *= -1
+		curvature *= curving_sign
+		print("too much curbature!", rad_to_deg(new_abs_angle), " ", rad_to_deg(param.max_absolute_angle), " ", rad_to_deg(curvature))
+	
 	growth_direction = growth_direction.rotated(curvature)
 	normal_direction = Vector2.from_angle(curvature + param.base_angle)
 	
+	## Add point along the path in the new growth direction
 	$Path2D.curve.add_point(GetPositionFromProgressRatio(1) + growth_direction * growing_rate)
 
+	## Get the width of the tip of the branch
+	var width:float = GetWidth(mid_index + 1)
+	
+	## Set the position of the new two points of the tip of the branch.
 	points[mid_index] 	  = GetPositionFromProgressRatio(1,  width/2.)
 	points[mid_index + 1] = GetPositionFromProgressRatio(1, -width/2.)
 	
@@ -234,5 +268,6 @@ func GetPolygon():
 	return $Shape.polygon
 
 func SetPolygon(new_polygon):
+	#new_polygon = Geometry2D.decompose_polygon_in_convex(new_polygon)
 	$Shape.polygon = new_polygon
 	$CollisionShape.polygon = new_polygon
