@@ -3,13 +3,13 @@ extends Resource
 class_name TreeParameters
 
 ## Length of a branch segment (in pixels)
-@export var growing_rate: float = 50.
+@export var growing_rate: float = 100.
 
 ## Width added to the branch (in pixels)
-@export var enlarge_rate: float = 10.
+@export var enlarge_rate: float = 2.
 
 ## Speed of growth, smaller is lower.
-@export var grow_frequency: float = 1.
+@export var grow_frequency: float = .1
 
 ## Choose the branching angle mode to use. \\
 ## Range: Any angle in intervall [-branching_angle; branching_angle] with respect to level N-1. \\
@@ -17,8 +17,8 @@ class_name TreeParameters
 ## SignedGaussian: Same as Gaussian, but can choose negative angle. (Equivalent to 2 gaussians centred on a and -a). \\
 @export_enum("RANGE", "GAUSSIAN", "SIGNED_GAUSSIAN") var branching_mode: String = "SIGNED_GAUSSIAN"
 ## Maximum angle between the trunk and a branch when branching
-@export_range(-180, 180, 5, "radians_as_degrees") var branching_angle: 	float 	= 0
-@export_range(0, 360, 1, "radians_as_degrees") var branching_spread: float 	= 0
+@export_range(-180, 180, 5, "radians_as_degrees") var branching_angle: 	float 	= PI/2.
+@export_range(0, 360, 1, "radians_as_degrees") var branching_spread: float 	= PI/18.
 
 ## Maximum number of level of the tree. the trunk is level 0, first chilf branches level 1, etc...
 @export_range(0, 100) var max_levels:	int 	= 1:

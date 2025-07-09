@@ -17,8 +17,6 @@ class_name GrowingTree
 @onready var trunk:Node = %Trunk
 
 func _ready():
-#	growing_branch_scene.resource_local_to_scene = true
-#	growing_branch_scene.resource_local_to_scene = true
 	$GrowthTimer.wait_time = param.grow_frequency
 	$GrowthTimer.start()
 
@@ -71,6 +69,8 @@ func AddBranch(branch:GrowingBranch) -> void:
 	
 	new_branch.color /= 2
 
+	new_branch.param.setup_local_to_scene()
+	
 #	new_branch.resolution =  branch.resolution / 2.
 	print(param.branch_len_curve.sample(new_branch.level / param.max_levels))
 	new_branch.param.max_length =  trunk.param.max_length * param.branch_len_curve.sample(new_branch.level)

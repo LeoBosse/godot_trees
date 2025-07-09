@@ -3,14 +3,14 @@
 [ext_resource type="Script" uid="uid://c3y2q7yvdbgq" path="res://scenes/growing_tree/tree_param.gd" id="1_srr4j"]
 
 [sub_resource type="Curve" id="Curve_l8ynq"]
-_limits = [0.0, 1.0, 0.0, 2.0]
+_limits = [0.0, 1.0, 0.0, 1.4]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1.4, 0.6), 0.0, 0.0, 0, 0]
 point_count = 2
 metadata/_snap_enabled = true
 
 [sub_resource type="Curve" id="Curve_srr4j"]
 _limits = [0.0, 1.0, 0.0, 2.0]
-_data = [Vector2(0, 1), 0.0, -0.9, 0, 1, Vector2(1, 0.1), 0.0, 0.0, 0, 0, Vector2(2, 0.1), 0.0, 0.0, 1, 0]
+_data = [Vector2(0, 1), 0.0, -0.7, 0, 1, Vector2(1, 0.3), 0.0, 0.0, 0, 0, Vector2(2, 0.1), -0.2, 0.0, 1, 0]
 point_count = 3
 metadata/_snap_enabled = true
 
@@ -21,8 +21,8 @@ enlarge_rate = 2.0
 grow_frequency = 0.1
 branching_mode = "SIGNED_GAUSSIAN"
 branching_angle = 1.5708
-branching_spread = 0.191986
-max_levels = 2
-branching_proba = 0.45
+branching_spread = 0.174533
+max_levels = 1
+branching_proba = 0.36
 branch_len_curve = SubResource("Curve_l8ynq")
 branch_max_width_curve = SubResource("Curve_srr4j")

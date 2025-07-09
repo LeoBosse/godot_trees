@@ -35,6 +35,7 @@ var max_width_reached:bool = false
 var max_length_reached:bool = false
 
 func _ready():
+	randomize()
 	param.rand_curve.seed = randi()
 	#print(param.rand_curve)
 	#add_child(Path2D.new(), true)
@@ -44,6 +45,7 @@ func _ready():
 	InitializeBranche()
 
 func GetPositionFromProgress(progress:float, width:float = 0) -> Vector2:
+	"""Return the local position from the progress along the branch and an orthogonnal offset."""
 	$Path2D/PathFollow2D.progress = progress
 	$Path2D/PathFollow2D.v_offset = width
 	return $Path2D/PathFollow2D.position
@@ -58,9 +60,11 @@ func GetPositionFromProgressRatio(progress_ratio:float, width:float = 0) -> Vect
 	return $Path2D/PathFollow2D.position
 
 func GetLength() -> float:
+	"""Return length of the branch's path"""
 	return $Path2D.curve.get_baked_length()
 
 func GetNbPoints() -> int:
+	"""Return the number of points along the branch's path."""
 	return $Path2D.curve.point_count
 
 
@@ -155,25 +159,31 @@ func GrowTip(points:PackedVector2Array, growing_rate:float) -> PackedVector2Arra
 	return points
 	
 func GrowBranch(points:PackedVector2Array, enlarge_rate:float) -> PackedVector2Array:
-	
+	"""Enlarge the branch without elongating it."""
 	if not growing:
 		return points
 	
 	var nb_vertices:int = len(points)
 	var mid_index:int = _GetMidIndex(nb_vertices)
 	
+	## Check if the base of the branch has reached maximum width.
+	## If true, set growing to false.
 	if GetWidth(0) >= param.max_width:
 		max_width_reached = true
 		growing = false
-		print("max_width_reached")
+		print("max_width_reached", param.max_width, " ", GetWidth(0))
 	
+	## The branch has not reached maximum width
+	## Loop over all the points of the Shape polygon and move them to enlarge the branch. 
+	## Each vertex width is updated to the previous vertex width.
 	for i in range(1, mid_index):
-		
+		## Get vertex indices
 		var i_R:int = mid_index - i
 		var i_L:int = mid_index + 1 + i
 		var pi_R:int = mid_index - i - 1
 		var pi_L:int = mid_index + i
 		
+		## Compute normal direction 
 		normal_direction = (points[i_R] - points[i_L]).normalized()
 		var width = (points[i_R] - points[i_L]).length()
 		var pre_width = ($Shape.polygon[pi_R] - $Shape.polygon[pi_L]).length()
@@ -197,7 +207,8 @@ func GrowBranch(points:PackedVector2Array, enlarge_rate:float) -> PackedVector2A
 	
 	
 func Cut(start:Vector2, end:Vector2):
-	
+	"""Cut the branch along a line defined by two points start and end. 
+	Everything above that line will be deleted."""
 	print(start, end)
 	
 	#var line = Line2D.new()
@@ -265,9 +276,11 @@ func Cut(start:Vector2, end:Vector2):
 				
 
 func GetPolygon():
+	"""Get the shape polygon"""
 	return $Shape.polygon
 
 func SetPolygon(new_polygon):
+	"""Set the shape polygon"""
 	#new_polygon = Geometry2D.decompose_polygon_in_convex(new_polygon)
 	$Shape.polygon = new_polygon
 	$CollisionShape.polygon = new_polygon
